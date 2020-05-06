@@ -6,7 +6,7 @@ terraform {
   backend "azurerm" {
     storage_account_name  = "insightsinfra"
     container_name        = "terraform"
-    key                   = "terraform/eastus/vm/terraform.tfstate"
+    key                   = "terraform/eastus/vm/demo.tfstate"
     access_key            = "+Ur+CFdxDmzgsQFVlBgqRdR8aOibP1ADq135pbiAtoQWkfmNliKfiHZ70jiy+qDmEA6jf8953Zn16krUiNtC6A=="
   }
 }
@@ -99,7 +99,7 @@ resource "azurerm_linux_virtual_machine" "bastion" {
     location              = "${var.location}"
     resource_group_name   = "${var.ResourceGroup}"
     network_interface_ids = ["${azurerm_network_interface.nic.id}"]
-    size                  = "Standard_D2s_v3"
+    size                  = "Standard_B1ms"
     custom_data           = "${base64encode(data.template_file.cloudconfig.rendered)}"
 
     os_disk {

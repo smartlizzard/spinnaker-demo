@@ -5,10 +5,10 @@ variable "location" {
   default = "eastus"
 }
 variable "cluster_name" {
-    default = "insight"  
+    default = "demo"  
 }
 variable "dns_prefix" {
-  default = "insight"
+  default = "demo"
 }
 variable "node_count" {
   default = "1"

@@ -15,7 +15,7 @@ tar -zxvf helm-v3.2.0-linux-amd64.tar.gz
 mv linux-amd64/helm /usr/local/bin/helm
 /bin/mkdir /home/ubuntu/.kube
 wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_386.zip
-mv terraform /usr/local/bin/
+/bin/mv terraform /usr/local/bin/
 az login --identity
 az storage blob download -c terraform -n config -f /home/ubuntu/.kube/config --account-name=insightsinfra
 chown -R ubuntu. /home/ubuntu/.kube/config
