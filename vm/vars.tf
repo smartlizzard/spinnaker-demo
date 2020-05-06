@@ -17,7 +17,7 @@ variable "ResourceGroup" {
   default ="InsightResourceGroup"
 }
 
-variable "STORAGE-ACCOUNT-KEY" {}
+variable "ARM_ACCESS_KEY" {}
 variable "ARM-TENANT-ID" {}
 variable "ARM-CLIENT-SECRET" {}
 variable "ARM-CLIENT-ID" {}
