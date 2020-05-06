@@ -16,3 +16,9 @@ variable "node_count" {
 variable "ResourceGroup" {
   default ="InsightResourceGroup"
 }
+
+variable "STORAGE-ACCOUNT-KEY" {}
+variable "ARM-TENANT-ID" {}
+variable "ARM-CLIENT-SECRET" {}
+variable "ARM-CLIENT-ID" {}
+variable "ARM-SUBSCRIPTION-ID" {}

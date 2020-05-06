@@ -1,13 +1,18 @@
 provider "azurerm" {
     version = "~>2.0"
     features {}
+    subscription_id = "${var.ARM-SUBSCRIPTION-ID}"
+    client_id       = "${var.ARM-CLIENT-ID}"
+    client_secret   = "${var.ARM-CLIENT-SECRET}"
+    tenant_id       = "${var.ARM-TENANT-ID}"
 }
+
 terraform {
   backend "azurerm" {
     storage_account_name  = "insightsinfra"
     container_name        = "terraform"
     key                   = "terraform/eastus/vm/demo.tfstate"
-    access_key            = "+Ur+CFdxDmzgsQFVlBgqRdR8aOibP1ADq135pbiAtoQWkfmNliKfiHZ70jiy+qDmEA6jf8953Zn16krUiNtC6A=="
+    access_key            = "${var.STORAGE-ACCOUNT-KEY}"
   }
 }
 data "azurerm_subscription" "primary" {
