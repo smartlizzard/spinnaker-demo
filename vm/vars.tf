@@ -18,7 +18,7 @@ variable "ResourceGroup" {
 }
 
 variable "ARM_ACCESS_KEY" {}
-variable "ARM-TENANT-ID" {}
-variable "ARM-CLIENT-SECRET" {}
-variable "ARM-CLIENT-ID" {}
-variable "ARM-SUBSCRIPTION-ID" {}
+variable "ARM_TENANT_ID" {}
+variable "ARM_CLIENT_SECRET" {}
+variable "ARM_CLIENT_ID" {}
+variable "ARM_SUBSCRIPTION_ID" {}
