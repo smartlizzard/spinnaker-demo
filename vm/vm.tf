@@ -1,18 +1,13 @@
 provider "azurerm" {
     version = "~>2.0"
     features {}
-    subscription_id = "${var.ARM_SUBSCRIPTION_ID}"
-    client_id       = "${var.ARM_CLIENT_ID}"
-    client_secret   = "${var.ARM_CLIENT_SECRET}"
-    tenant_id       = "${var.ARM_TENANT_ID}"
 }
 
 terraform {
   backend "azurerm" {
-    storage_account_name  = "insightsinfra"
-    container_name        = "terraform"
-    key                   = "terraform/eastus/vm/demo.tfstate"
-    access_key            = "${var.ARM_ACCESS_KEY}"
+    storage_account_name  = "${var.STORAGE_ACCOUNT_NAME}"
+    container_name        = "${var.BOLB_CONTAINER_NAME}"
+    key                   = "${var.BOLB_CONTAINER_NAME}/eastus/vm/demo.tfstate"  # YOU CAN CHANGE THIS
   }
 }
 data "azurerm_subscription" "primary" {
@@ -25,7 +20,7 @@ resource "azurerm_virtual_network" "network" {
     resource_group_name = "${var.ResourceGroup}"
 
     tags = {
-        environment = "Terraform Demo"
+        environment = "${var.tag}"
     }
 }
 
@@ -45,7 +40,7 @@ resource "azurerm_public_ip" "publicip" {
     allocation_method            = "Dynamic"
 
     tags = {
-        environment = "Terraform Demo"
+        environment = "${var.tag}"
     }
 }
 
@@ -68,7 +63,7 @@ resource "azurerm_network_security_group" "nsg" {
     }
 
     tags = {
-        environment = "Terraform Demo"
+        environment = "${var.tag}"
     }
 }
 
@@ -86,7 +81,7 @@ resource "azurerm_network_interface" "nic" {
     }
 
     tags = {
-        environment = "Terraform Demo"
+        environment = "${var.tag}"
     }
 }
 
@@ -94,48 +89,6 @@ resource "azurerm_network_interface" "nic" {
 resource "azurerm_network_interface_security_group_association" "example" {
     network_interface_id      = "${azurerm_network_interface.nic.id}"
     network_security_group_id = "${azurerm_network_security_group.nsg.id}"
-}
-
-# Generate random text for a unique storage account name
-
-# Create virtual machine
-resource "azurerm_linux_virtual_machine" "bastion" {
-    name                  = "${var.name}-VM"
-    location              = "${var.location}"
-    resource_group_name   = "${var.ResourceGroup}"
-    network_interface_ids = ["${azurerm_network_interface.nic.id}"]
-    size                  = "Standard_B1ms"
-    custom_data           = "${base64encode(data.template_file.cloudconfig.rendered)}"
-
-    os_disk {
-        name              = "${var.name}-OsDisk"
-        caching           = "ReadWrite"
-        storage_account_type = "Standard_LRS"
-    }
-
-    source_image_reference {
-        publisher = "Canonical"
-        offer     = "UbuntuServer"
-        sku       = "16.04.0-LTS"
-        version   = "latest"
-    }
-
-    computer_name  = "bastion"
-    admin_username = "ubuntu"
-    disable_password_authentication = true
-        
-    admin_ssh_key {
-        username       = "ubuntu"
-        public_key     = "${file("./id_rsa.pub")}"
-    }
-
-    identity {
-        type = "SystemAssigned"
-    }
-
-    tags = {
-        environment = "Terraform Demo"
-    }
 }
 
 data "template_file" "cloudconfig" {
@@ -168,3 +121,53 @@ resource "azurerm_role_assignment" "bastion" {
         ]
     }
 }
+
+data "azurerm_key_vault" "mySecret" {
+  name = "${var.VAULT_NAME}" 
+  resource_group_name = "${var.ResourceGroup}"
+}
+
+data "azurerm_key_vault_secret" "example" {
+  name         = "VM-PUBLIC-KEY"                 # Give your public key vault secret name
+  key_vault_id = data.azurerm_key_vault.mySecret.id
+}
+# Create virtual machine
+resource "azurerm_linux_virtual_machine" "bastion" {
+    name                  = "${var.name}-01"
+    location              = "${var.location}"
+    resource_group_name   = "${var.ResourceGroup}"
+    network_interface_ids = ["${azurerm_network_interface.nic.id}"]
+    size                  = "Standard_B1ms"
+    custom_data           = "${base64encode(data.template_file.cloudconfig.rendered)}"
+
+    os_disk {
+        name              = "${var.name}-OsDisk"
+        caching           = "ReadWrite"
+        storage_account_type = "Standard_LRS"
+    }
+
+    source_image_reference {
+        publisher = "Canonical"
+        offer     = "UbuntuServer"
+        sku       = "16.04.0-LTS"
+        version   = "latest"
+    }
+
+    computer_name  = "bastion"
+    admin_username = "ubuntu"
+    disable_password_authentication = true
+
+    admin_ssh_key {
+        username       = "ubuntu"
+        public_key     = "${data.azurerm_key_vault_secret.example.value}"
+    }
+
+    identity {
+        type = "SystemAssigned"
+    }
+
+    tags = {
+        environment = "${var.tag}"
+    }
+}
+

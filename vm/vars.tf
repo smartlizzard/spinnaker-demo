@@ -14,11 +14,18 @@ variable "node_count" {
   default = "1"
 }
 variable "ResourceGroup" {
-  default ="InsightResourceGroup"
+  default ="YOUR_RESOURCE_GROUP"
+}
+variable "STORAGE_ACCOUNT_NAME" {
+  default= "YOUR_STORAGE_ACCOUNT_NAME"
+}
+variable "BOLB_CONTAINER_NAME" {
+  default = "YOUR_BOLB_CONTAINER_NAME"
+}
+variable "tag" {
+  default = "Terraform Demo" 
 }
 
-variable "ARM_ACCESS_KEY" {}
-variable "ARM_TENANT_ID" {}
-variable "ARM_CLIENT_SECRET" {}
-variable "ARM_CLIENT_ID" {}
-variable "ARM_SUBSCRIPTION_ID" {}
+variable "VAULT_NAME" {
+  default = "PUT-VAULT-MAME" # Give your vault name
+}
