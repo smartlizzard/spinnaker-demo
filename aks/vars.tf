@@ -26,7 +26,7 @@ variable "ResourceGroup" {
 variable "tag" {
   default = "Terraform Demo" 
 }
-variable "VAULT_NAME" {
+variable "vault_name" {
   default = "GIVE_VAULT_NAME"
   description= "Name of the vault"
 }
@@ -41,5 +41,9 @@ variable "container_name" {
 variable "vault_resource_group" {
   default = "VAULT_RESOURCE_GROUP"
   description= "Put your vault resource group name"
+}
+variable "vault_vm_public_key" {
+  default = "VM-PUBLIC-KEY"
+  description= "Name of the vault secret in which user public key encrepted with vault"
 }
 

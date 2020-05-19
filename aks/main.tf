@@ -6,9 +6,9 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    storage_account_name  = "${var.STORAGE_ACCOUNT_NAME}"
-    container_name        = "${var.BOLB_CONTAINER_NAME}"
-    key                   = "${var.BOLB_CONTAINER_NAME}/eastus/aks/demo.tfstate"  # YOU CAN CHANGE THIS
+    storage_account_name  = "STORAGE_ACCOUNT_NAME"
+    container_name        = "BOLB_CONTAINER_NAME"
+    key                   = "BOLB_CONTAINER_NAME/eastus/aks/demo.tfstate"  # YOU CAN CHANGE THIS
   }
 }
 
@@ -92,8 +92,8 @@ resource "azurerm_role_assignment" "aks_sp_role_assignment" {
 }
 
 data "azurerm_key_vault" "mySecret" {
-  name = "${var.VAULT_NAME}" 
-  resource_group_name = "${var.ResourceGroup}"
+  name = "${var.vault_name}" 
+  resource_group_name = "${var.vault_resource_group}"
 }
 
 data "azurerm_key_vault_secret" "example" {
