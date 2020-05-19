@@ -32,11 +32,11 @@ variable "VAULT_NAME" {
 }
 variable "storage_account" {
   default = "STORAGE_ACCOUNT_NAME"
-  description= "Put storage account where backend tfstate will store"
+  description= "Put storage account where kube_config will store"
 }
 variable "container_name" {
   default = "CONTAINER_NAME"
-  description= "Put container name where backend tfstate will store"
+  description= "Put container name where kube_config will store"
 }
 variable "vault_resource_group" {
   default = "VAULT_RESOURCE_GROUP"
