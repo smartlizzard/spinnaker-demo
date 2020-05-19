@@ -5,9 +5,9 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    storage_account_name  = "${var.STORAGE_ACCOUNT_NAME}"
-    container_name        = "${var.BOLB_CONTAINER_NAME}"
-    key                   = "${var.BOLB_CONTAINER_NAME}/eastus/vm/demo.tfstate"  # YOU CAN CHANGE THIS
+    storage_account_name  = "STORAGE_ACCOUNT_NAME"  # Replace this with your storage account name
+    container_name        = "BOLB_CONTAINER_NAME"   # Replace with your container name
+    key                   = "BOLB_CONTAINER_NAME/eastus/vm/demo.tfstate"  # YOU CAN CHANGE THIS
   }
 }
 data "azurerm_subscription" "primary" {
@@ -124,11 +124,11 @@ resource "azurerm_role_assignment" "bastion" {
 
 data "azurerm_key_vault" "mySecret" {
   name = "${var.VAULT_NAME}" 
-  resource_group_name = "${var.ResourceGroup}"
+  resource_group_name = "${var.vault_rg}"
 }
 
 data "azurerm_key_vault_secret" "example" {
-  name         = "VM-PUBLIC-KEY"                 # Give your public key vault secret name
+  name         = "${var.vault_vm_public_key}"
   key_vault_id = data.azurerm_key_vault.mySecret.id
 }
 # Create virtual machine
@@ -137,7 +137,7 @@ resource "azurerm_linux_virtual_machine" "bastion" {
     location              = "${var.location}"
     resource_group_name   = "${var.ResourceGroup}"
     network_interface_ids = ["${azurerm_network_interface.nic.id}"]
-    size                  = "Standard_B1ms"
+    size                  = "${var.vm_size}"
     custom_data           = "${base64encode(data.template_file.cloudconfig.rendered)}"
 
     os_disk {
@@ -153,7 +153,7 @@ resource "azurerm_linux_virtual_machine" "bastion" {
         version   = "latest"
     }
 
-    computer_name  = "bastion"
+    computer_name  = "bastion"   # Name of computer, we can change
     admin_username = "ubuntu"
     disable_password_authentication = true
 
